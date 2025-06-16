@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: office-converter
+  labels:
+    app: office-converter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: office-converter
+  template:
+    metadata:
+      labels:
+        app: office-converter
+    spec:
+      containers:
+      - name: converter
+        image: office_converter:2.0
+        ports:
+        - containerPort: 8000
+        env:
+        - name: MINIO_ENDPOINT
+          value: "172.31.0.2:9000"
+        - name: MINIO_ACCESS_KEY
+          value: "MPA7oqhIweEdD2tNDIFi"
+        - name: MINIO_SECRET_KEY
+          value: "tdx0Zx7puyHv7VtljlF33yCLzrHy6GPHsoQwLjyB"
+        resources:
+          requests:
+            memory: "1.5Gi"
+            cpu: "1000m"
+          limits:
+            memory: "3Gi"
+            cpu: "2000m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: office-converter-service
+  labels:
+    app: office-converter
+spec:
+  selector:
+    app: office-converter
+  ports:
+  - port: 8016
+    targetPort: 8000
+    protocol: TCP
+  type: ClusterIP
