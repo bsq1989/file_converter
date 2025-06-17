@@ -340,6 +340,7 @@ async def process_conversion_result(task_id: str, future):
             if minio_url:
                 conversion_tasks[task_id]["minio_url"] = minio_url
                 conversion_tasks[task_id]["minio_object"] = object_name
+                conversion_tasks[task_id]['bucket'] = MINIO_BUCKET
                 
                 # 如果不需要保留本地文件且已成功上传到MinIO，则删除本地文件
                 if not KEEP_LOCAL_FILES:
